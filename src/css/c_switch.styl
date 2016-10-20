@@ -1,0 +1,55 @@
+.c-switch
+  .content-container
+    flex-direction column
+    max-width 100rem
+    margin 0 auto
+    padding 20px 0.4rem
+  &-user
+    background #fff
+    display flex
+    align-items center
+    radius()
+    shadow()
+    margin-bottom 14px
+    &-true{
+      background-color black
+      color white
+    }
+    &-inactive
+      pointer-events none
+      box-shadow none
+      background rgba(#000,0.2)
+      opacity 0.75
+      flex-wrap wrap
+    
+    &-text
+      display flex
+      align-items center
+      flex 1 1 auto
+      
+    &-name
+      font-weight 600
+      flex 1 1 auto
+      
+    &-role
+      margin 0 10px 0 0.4rem
+      font-size 0.8em
+      font-weight 600
+      text-transform capitalize
+      color white
+      padding 0.4rem
+      radius()
+      &-student
+        background-color orange
+      &-teacher
+        background-color purple
+
+    &-notInClass
+      background-color rgba(#000,0.8)
+      padding 0.4rem
+      margin -0.4rem -0.4rem -0.4rem 0
+      display inline-block
+
+    .avatar-container
+      margin 10px
+      flex 0 0 auto    
