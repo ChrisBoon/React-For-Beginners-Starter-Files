@@ -30,8 +30,7 @@ module.exports = {
     role: 'teacher',
     class: '7d',
     messageHistory: {
-      chat1: 2,
-      chat2: 3
+      
     }
   },
 
