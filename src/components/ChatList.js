@@ -61,6 +61,9 @@ class ChatList extends React.Component{
     } else {
       return(
         <div className="op2-chatList">
+          <div className="chatList-controls">
+            <button>New Chat</button>
+          </div>        
           <p className="no-chats-message">Looks like you aren't in any Chats right now.</p>
         </div>
       )
