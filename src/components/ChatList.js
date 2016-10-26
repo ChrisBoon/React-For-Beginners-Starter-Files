@@ -45,18 +45,27 @@ class ChatList extends React.Component{
 
 	render(){
     const chats = this.props.chats;
-		return(
-			<div className="op2-chatList">
-				<div className="chatList-controls">
-					<button>New Chat</button>
-				</div>
-				<ul>
-					{
-						Object.keys(chats).map(this.renderMessages)
-					}				
-				</ul>
-			</div>
-		)
+    if (this.props.users[this.props.currentUser.userId].messageHistory) {
+      return(
+        <div className="op2-chatList">
+          <div className="chatList-controls">
+            <button>New Chat</button>
+          </div>
+          <ul>
+            {
+              Object.keys(chats).map(this.renderMessages)
+            }       
+          </ul>
+        </div>
+      )
+    } else {
+      return(
+        <div className="op2-chatList">
+          <p className="no-chats-message">Looks like you aren't in any Chats right now.</p>
+        </div>
+      )
+    }
+
 	}
 }
 
