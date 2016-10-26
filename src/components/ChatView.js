@@ -8,7 +8,6 @@ class ChatView extends React.Component{
     super();
     this.renderMessage = this.renderMessage.bind(this);
     this.createMessage = this.createMessage.bind(this);
-    this.renderView = this.renderView.bind(this);
 
     this.state = {
       currentChatId: location.pathname.replace('/chat/','')
@@ -34,15 +33,13 @@ class ChatView extends React.Component{
   createMessage(obj) {
     this.props.addMessage(this.state.currentChatId, obj);
   }
-  renderView(key){
 
+
+  render(){
     const chats = this.props.chats;
-    const chat = this.props.chats[this.state.currentChatId];
-
-    if (chat.chatId===key ) {
-      return(
-        <div className="op2-chatView" key={key}>    
-          {console.log(`chat:${chat}`)}
+    const chat = chats[this.state.currentChatId];    
+    return(
+        <div className="op2-chatView">    
           <h3 className="op2-chatView-heading">{chat.title}</h3>
             <ul className="op2-chatView-messages">
               {
@@ -59,23 +56,7 @@ class ChatView extends React.Component{
                 postReply={this.createMessage}
               />
             </div>
-          </div>
-      )
-
-    }
-
-  }
-
-  render(){
-    return(
-      <div>
-        {
-          //this is a really bad hack to make it not run this until index renders the second time
-          Object
-          .keys(this.props.chats)
-          .map( (key)=>this.renderView(key) )
-        }
-      </div>
+          </div>      
     )
 
   }
