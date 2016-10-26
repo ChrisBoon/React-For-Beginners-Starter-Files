@@ -8,11 +8,13 @@ class SwitchUser extends React.Component{
   constructor() {
     super();
     this.renderUser = this.renderUser.bind(this);
+    this.changeUser = this.changeUser.bind(this);
   }
 
-  // changeUser(userId){
-
-  // }
+  changeUser(userId){
+    this.props.changeUser(userId);
+    this.context.router.transitionTo(`/chat`)
+  }
 
   renderUser(key) {
     const allUsers = this.props.allUsers;
@@ -20,7 +22,7 @@ class SwitchUser extends React.Component{
     const currentUser = userId === key;
     if (allUsers[key].class ==='7d') {
       return(
-        <li key={key} className={`c-switch-user c-switch-user-${allUsers[key].role} c-switch-user-${currentUser? 'true' : 'false'} `} onClick={()=> this.props.changeUser(key)}>
+        <li key={key} className={`c-switch-user c-switch-user-${allUsers[key].role} c-switch-user-${currentUser? 'true' : 'false'} `} onClick={()=> this.changeUser(key)}>
           <div className="avatar-container">
             <img src={allUsers[key].image} alt={allUsers[key].name} className="avatar-img"/>
           </div>
@@ -71,6 +73,10 @@ SwitchUser.propTypes = {
   user: React.PropTypes.object.isRequired,
   allUsers: React.PropTypes.object.isRequired,
   changeUser: React.PropTypes.func.isRequired
+}
+
+SwitchUser.contextTypes = {
+  router: React.PropTypes.object
 }
 
 export default SwitchUser;
