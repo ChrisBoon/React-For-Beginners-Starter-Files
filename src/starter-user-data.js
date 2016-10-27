@@ -30,7 +30,7 @@ module.exports = {
     role: 'teacher',
     class: '7d',
     messageHistory: {
-      
+
     }
   },
 
@@ -70,7 +70,7 @@ module.exports = {
   u55hdds: {
     name: 'Pat Lewis',
     userId: 'u55hdds',
-    image: '//randomuser.me/api/portraits/men/73.jpg',
+    image: '//randomuser.me/api/portraits/men/71.jpg',
     role: 'student',
     class: '7d',
     messageHistory: {}
