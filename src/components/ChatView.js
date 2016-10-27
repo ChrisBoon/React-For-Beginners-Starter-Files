@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Match, Link } from 'react-router';
 import Message from './Message';
 import ReplyToMessage from './ReplyToMessage';
 
@@ -28,6 +28,7 @@ class ChatView extends React.Component{
 
   createMessage(obj) {
     this.props.addMessage(this.props.params.chatId, obj);
+    this.context.router.transitionTo(`/chat/${this.props.params.chatId}`)
   }
 
 
@@ -47,22 +48,38 @@ class ChatView extends React.Component{
                 ))
               }
             </ul>
-            <div className="op2-chatView-controls">
-              <ReplyToMessage
+              <Match pattern={`/chat/:chatId`} exactly render={() => (
+                <div className="op2-chatView-controls">
+                  <Link to={`/chat/${this.props.params.chatId}/reply`}>
+                    add message
+                  </Link>
+                  <Link to={`/chat/${this.props.params.chatId}/invite`}>
+                    invite users
+                  </Link>
+              </div>
+
+              )}/>
+              
+              <Match pattern={`/chat/:chatId/reply`} component={(params) => <ReplyToMessage
                 author={this.props.currentUser.userId}
                 postReply={this.createMessage}
-              />
-            </div>
+              />}/>
+
           </div>      
     )
 
   }
 }
+
 ChatView.propTypes = {
   chats: React.PropTypes.object.isRequired,
   users: React.PropTypes.object.isRequired,
   currentUser: React.PropTypes.object.isRequired,
   addMessage: React.PropTypes.func.isRequired,
+}
+
+ChatView.contextTypes = {
+  router: React.PropTypes.object
 }
 
 export default ChatView;
