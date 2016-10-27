@@ -10,6 +10,7 @@ class ChatView extends React.Component{
     super(props);
     this.renderMessage = this.renderMessage.bind(this);
     this.createMessage = this.createMessage.bind(this);
+    this.addViewersToMessage = this.addViewersToMessage.bind(this);
   }
 
   componentWillMount() {
@@ -25,11 +26,17 @@ class ChatView extends React.Component{
             date={item.dateCreated}
             type={item.messageType}
             content={item.messageContent}
+            name={user.name}
+            users={this.props.users}            
           />
   }
 
   createMessage(obj) {
     this.props.addMessage(this.props.params.chatId, obj);
+    this.context.router.transitionTo(`/chat/${this.props.params.chatId}`)
+  }
+  addViewersToMessage(obj) {
+    this.props.addViewersToMessage(this.props.params.chatId, obj);
     this.context.router.transitionTo(`/chat/${this.props.params.chatId}`)
   }
 
@@ -70,7 +77,8 @@ class ChatView extends React.Component{
               <Match pattern={`/chat/:chatId/invite`} component={(params) => <InviteUserToChat
                 chatData={chat}
                 users={this.props.users}
-                currentUser={this.props.currentUser} 
+                currentUser={this.props.currentUser}
+                addViewersToMessage={this.addViewersToMessage}
               />}/>              
 
           </div>      

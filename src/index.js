@@ -21,6 +21,7 @@ class Root extends React.Component{
 
     this.updateCount = this.updateCount.bind(this);
     this.addMessage = this.addMessage.bind(this);
+    this.addViewersToMessage = this.addViewersToMessage.bind(this);
     this.changeUser = this.changeUser.bind(this);
     this.resetData = this.resetData.bind(this);
 
@@ -65,7 +66,43 @@ class Root extends React.Component{
     }
     //set state
     this.setState({ v1 });
-  }  
+  }
+
+  addViewersToMessage(chatId, chatData){
+    console.log(`index has chatData as ${chatData} and chatId as ${chatId}`)
+    const v1 = {...this.state.v1}
+
+    const chat = v1.chats[chatId];
+    let viewers = chat.viewers;
+    const users = v1.users;
+
+    //add chat to users userX.messageHistory:
+    //for each new user
+    for (const userId of chatData.messageContent) {
+      //add chatX to messageHistory with value of 0
+      if (users[userId].messageHistory) {
+        users[userId].messageHistory[chatId] = 0;
+      } else {
+        users[userId].messageHistory = {
+          [chatId]:0
+        }
+      }
+    }
+
+    //add chosen users to chatX.viewers list
+    const allViewers = viewers.concat(chatData.messageContent);
+    v1.chats[chatId].viewers = allViewers;
+
+    //add message to chatX.messages
+    chat.messages.push(chatData);
+
+    //update message count
+    chat.count += 1;
+
+    //set state
+    this.setState({ v1 });
+
+  }
 
   updateCount(userId, chatId) {
     const v1 = {...this.state.v1}
@@ -103,6 +140,7 @@ class Root extends React.Component{
                     user={user} 
                     chats={this.state.v1.chats} 
                     addMessage={this.addMessage}
+                    addViewersToMessage={this.addViewersToMessage}
                     allUsers={this.state.v1.users}
                     />
           }/>

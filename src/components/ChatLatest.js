@@ -40,6 +40,8 @@ class ChatLatest extends React.Component{
             date={message.message.dateCreated}
             type={message.message.messageType}
             content={message.message.messageContent}
+            name={message.user.name}
+            users={this.props.users}
         />
 			</div>
       </Link>

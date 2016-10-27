@@ -414,3 +414,32 @@ body {
   display: block;
   max-width: 100%;
 }
+.user-chip {
+  border-radius: 2px;
+  margin: 2px;
+  background-color: #ddd;
+  display: inline-block;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+              -ms-grid-row-align: center;
+          align-items: center;
+  vertical-align: middle;
+  padding: 2px 4px;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+.is-primary .user-chip {
+  border-radius: 12px;
+}
+.user-chip .avatar-container {
+  border-radius: 50%;
+  width: 1.4em;
+  height: 1.4em;
+  margin: 0;
+  margin-right: 4px;
+  display: inline-block;
+  vertical-align: middle;
+}
+.c-invite-included-true {
+  color: #d12028;
+}

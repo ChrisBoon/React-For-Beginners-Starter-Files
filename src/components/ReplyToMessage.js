@@ -3,6 +3,7 @@ import React from 'react';
 class ReplyToMessage extends React.Component {
   createReply(event) {
     event.preventDefault();
+    console.log(this)
     const message = {
       author: this.props.author,
       dateCreated: Date.now(),

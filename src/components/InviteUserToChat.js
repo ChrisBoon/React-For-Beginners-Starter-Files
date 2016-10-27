@@ -1,19 +1,44 @@
 import React from 'react';
-import {Link} from 'react-router';
 
-import Header from './Header';
 
 class InviteUserToChat extends React.Component{
 
   constructor() {
     super();
     this.renderUser = this.renderUser.bind(this);
-    this.inviteUser = this.inviteUser.bind(this);
+    this.inviteUsers = this.inviteUsers.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      addedUsers: []
+    }
   }
 
-  inviteUser(userId){
-    // do something
-    // go back to regular chat view
+  handleChange(event) {
+    const addedUsers = this.state.addedUsers.slice();
+    if (event.target.checked) {
+      addedUsers.push(event.target.name);
+    } else {
+      const i = addedUsers.indexOf(event.target.name);
+      if(i !== -1) {
+        addedUsers.splice(i, 1);
+      }
+    }
+    this.setState({
+      addedUsers
+    });
+
+  }
+
+  inviteUsers(event){
+    event.preventDefault();
+    const message = {
+      author: this.props.currentUser.userId,
+      dateCreated: Date.now(),
+      messageType: 'addViewer',
+      messageContent: this.state.addedUsers
+    };
+    this.props.addViewersToMessage(message);
+    this.addViewerForm.reset();    
   }
 
   renderUser(key) {
@@ -22,13 +47,27 @@ class InviteUserToChat extends React.Component{
     const chatData = this.props.chatData;
 
     const alreadyWatching = chatData.viewers.includes(renderedUser.userId);
+    let includeToggle;
+    if (!alreadyWatching) {
+      includeToggle = <input 
+          type="checkbox" 
+          name={key}
+          onChange={this.handleChange}
+          ref={(input)=>{this[key] = input}}
+          />
+    }
     
-    if (true) {}
     return (
-      <p 
+      <li 
       key={key}
       className={`c-invite-included-${alreadyWatching? 'true' : 'false'}`}
-      >{renderedUser.name}</p>
+      >
+        <label>{renderedUser.name}
+        {includeToggle}
+        </label>
+        
+        <span className={`toggle ${alreadyWatching? 'toggle-active toggle-disabled' : ''}`}></span>
+      </li>
     )
   }
 
@@ -45,6 +84,9 @@ class InviteUserToChat extends React.Component{
 
     return(
       <div className="c-invite modal">
+        <form
+        ref={(input) => this.addViewerForm = input} 
+        onSubmit={ (e) => this.inviteUsers(e) }>
           <ul>{
             Object
               .keys(users)
@@ -62,6 +104,8 @@ class InviteUserToChat extends React.Component{
               })
               .map(this.renderUser)}
           </ul>
+          <button type="submit">Add users</button>
+        </form>
 
       </div>
     )
@@ -72,10 +116,6 @@ InviteUserToChat.propTypes = {
   currentUser: React.PropTypes.object.isRequired,
   users: React.PropTypes.object.isRequired,
   chatData: React.PropTypes.object.isRequired,
-}
-
-InviteUserToChat.contextTypes = {
-  router: React.PropTypes.object
 }
 
 export default InviteUserToChat;
