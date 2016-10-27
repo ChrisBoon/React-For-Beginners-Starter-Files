@@ -18,19 +18,48 @@ class InviteUserToChat extends React.Component{
 
   renderUser(key) {
     const users = this.props.users;
+    const renderedUser = users[key]
+    const chatData = this.props.chatData;
+
+    const alreadyWatching = chatData.viewers.includes(renderedUser.userId);
+    
+    if (true) {}
     return (
-      <p key={key}>{users[key].name}</p>
+      <p 
+      key={key}
+      className={`c-invite-included-${alreadyWatching? 'true' : 'false'}`}
+      >{renderedUser.name}</p>
     )
   }
 
   render(){
     const users = this.props.users;
+
+    const stripSelf = (obj) =>{
+      if (obj === this.props.currentUser.userId) {
+        return false
+      } else {
+        return true
+      }
+    };
+
     return(
       <div className="c-invite modal">
-
           <ul>{
             Object
               .keys(users)
+              .filter(stripSelf)
+              .sort((a,b) => { 
+                const nameA = users[a].name,
+                      nameB = users[b].name;
+                if (nameA < nameB) {
+                  return -1;
+                }
+                if (nameA > nameB) {
+                  return 1;
+                }
+                return 0;
+              })
               .map(this.renderUser)}
           </ul>
 
@@ -40,6 +69,7 @@ class InviteUserToChat extends React.Component{
 }
 
 InviteUserToChat.propTypes = {
+  currentUser: React.PropTypes.object.isRequired,
   users: React.PropTypes.object.isRequired,
   chatData: React.PropTypes.object.isRequired,
 }

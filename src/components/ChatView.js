@@ -70,6 +70,7 @@ class ChatView extends React.Component{
               <Match pattern={`/chat/:chatId/invite`} component={(params) => <InviteUserToChat
                 chatData={chat}
                 users={this.props.users}
+                currentUser={this.props.currentUser} 
               />}/>              
 
           </div>      
