@@ -49,12 +49,16 @@ class App extends React.Component{
               chats={this.props.chats}
               currentUser={this.props.user}
             />
-            <Match pattern={`/chat/:chatId`} component={() => <ChatView 
+            <Match pattern={`/chat/:chatId`} component={(params) => <ChatView 
               chats={this.props.chats} 
               users={this.props.allUsers} 
               currentUser={this.props.user} 
               updateCount={this.updateCount} 
-              addMessage={this.addMessage}/>} />
+              addMessage={this.addMessage}
+              {...params}
+              />} 
+
+              />
           </div>
           
         </div>

@@ -4,18 +4,14 @@ import Message from './Message';
 import ReplyToMessage from './ReplyToMessage';
 
 class ChatView extends React.Component{
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.renderMessage = this.renderMessage.bind(this);
     this.createMessage = this.createMessage.bind(this);
-
-    this.state = {
-      currentChatId: location.pathname.replace('/chat/','')
-    };
   }
 
   componentWillMount() {
-    this.props.updateCount(this.props.currentUser.userId,this.state.currentChatId);
+    this.props.updateCount(this.props.currentUser.userId,this.props.params.chatId);
   }
 
 
@@ -31,13 +27,14 @@ class ChatView extends React.Component{
   }
 
   createMessage(obj) {
-    this.props.addMessage(this.state.currentChatId, obj);
+    this.props.addMessage(this.props.params.chatId, obj);
   }
 
 
   render(){
     const chats = this.props.chats;
-    const chat = chats[this.state.currentChatId];    
+    const chat = chats[this.props.params.chatId];
+    console.log(this.props.params.chatId);
     return(
         <div className="op2-chatView">    
           <h3 className="op2-chatView-heading">{chat.title}</h3>
