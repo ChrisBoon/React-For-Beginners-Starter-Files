@@ -2,6 +2,8 @@ import React from 'react';
 import { Match, Link } from 'react-router';
 import Message from './Message';
 import ReplyToMessage from './ReplyToMessage';
+import InviteUserToChat from './InviteUserToChat';
+
 
 class ChatView extends React.Component{
   constructor(props) {
@@ -64,6 +66,11 @@ class ChatView extends React.Component{
                 author={this.props.currentUser.userId}
                 postReply={this.createMessage}
               />}/>
+
+              <Match pattern={`/chat/:chatId/invite`} component={(params) => <InviteUserToChat
+                chatData={chat}
+                users={this.props.users}
+              />}/>              
 
           </div>      
     )
