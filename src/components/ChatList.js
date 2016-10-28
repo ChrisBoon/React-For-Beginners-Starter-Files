@@ -5,19 +5,7 @@ class ChatList extends React.Component{
 
   constructor() {
     super();
-    this.getUsers = this.getUsers.bind(this);
     this.renderMessages = this.renderMessages.bind(this);
-  }
-
-  getUsers(viewers){
-    //getting just the data for viewers of a given chat
-    //ref to all users
-    const users = this.props.users;
-    const viewersData = viewers.reduce(function(o, viewer, i) {
-      o[viewers[i]] = users[viewer];
-      return o;
-    }, {});
-    return viewersData;
   }
 
   renderMessages(key) {
@@ -30,7 +18,7 @@ class ChatList extends React.Component{
     if (chats[key].viewers.includes(this.props.currentUser.userId) ) {
       return (
         <ChatLatest
-          users={this.getUsers(chats[key].viewers)}
+          users={this.props.users}
           key={key}
           index={key}
           title={chats[key].title}
@@ -40,7 +28,6 @@ class ChatList extends React.Component{
         />
       )  
     }
-    
   }
 
 	render(){
