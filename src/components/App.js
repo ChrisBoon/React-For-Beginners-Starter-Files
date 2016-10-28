@@ -54,6 +54,11 @@ class App extends React.Component{
               chats={this.props.chats}
               currentUser={this.props.user}
             />
+
+            <Match pattern={`/chat/`} exactly render={
+              ()=>(<div>No chats selected</div>)
+            } />
+
             <Match pattern={`/chat/:chatId`} component={(params) => <ChatView 
               chats={this.props.chats} 
               users={this.props.allUsers} 
