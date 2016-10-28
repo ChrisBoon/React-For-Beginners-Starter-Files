@@ -24,6 +24,7 @@ class Root extends React.Component{
     this.addViewersToMessage = this.addViewersToMessage.bind(this);
     this.changeUser = this.changeUser.bind(this);
     this.resetData = this.resetData.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
 
     this.state = {
       v1: {
@@ -107,6 +108,31 @@ class Root extends React.Component{
 
   }
 
+  leaveChat(chatId, chatData){
+    const v1 = {...this.state.v1}
+    const chat = v1.chats[chatId];
+    const users = v1.users;
+
+    //remove userId from chatX.viewers
+    const i = chat.viewers.indexOf(chatData.author);
+      if(i !== -1) {
+        chat.viewers.splice(i, 1);
+      }
+
+    //add message to chatX.messages
+    chat.messages.push(chatData);
+
+    //update message count
+    chat.count += 1;
+
+    //update users history to include this message (technically they don't see it but it would be dumb to count it)
+    users[chatData.author].messageHistory[chatId] += 1;
+
+    //set state
+    this.setState({ v1 });
+
+  }  
+
   updateCount(userId, chatId) {
     const v1 = {...this.state.v1}
     if (v1.users[userId]) {
@@ -145,6 +171,7 @@ class Root extends React.Component{
                     addMessage={this.addMessage}
                     addViewersToMessage={this.addViewersToMessage}
                     allUsers={this.state.v1.users}
+                    leaveChat={this.leaveChat}
                     />
           }/>
 

@@ -24,7 +24,7 @@ class Message extends React.Component{
             <span key={i}>
               <span className="user-chip">
                 <span className="avatar-container">
-                  <img src={this.props.users[value].image} alt={this.props.username} className="avatar-img"/>
+                  <img src={this.props.users[value].image} className="avatar-img"/>
                 </span>
                 {this.props.users[value].name}
               </span>
@@ -38,7 +38,20 @@ class Message extends React.Component{
 
       message = <p className="op2-chatMessage-text">{this.props.name} invited {userNames} to the chat</p>
     }
-    if(this.props.type ==='text'|| this.props.type ==='addViewer'){
+    else if (this.props.type ==='leave') {
+
+
+      message = <p className="op2-chatMessage-text">
+              <span className="user-chip">
+                <span className="avatar-container">
+                  <img src={this.props.avatar} className="avatar-img"/>
+                </span>
+                {this.props.name}
+              </span> has left this Chat.</p>
+
+
+    }
+    if(this.props.type ==='text'|| this.props.type ==='addViewer'|| this.props.type ==='leave'){
       content = <div className="op2-chatMessage">
                   <div className="avatar-container">
                     <img src={this.props.avatar} alt={this.props.username} className="avatar-img"/>

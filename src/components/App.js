@@ -14,6 +14,7 @@ class App extends React.Component{
     this.addMessage = this.addMessage.bind(this);
     this.addViewersToMessage = this.addViewersToMessage.bind(this);
     this.updateCount = this.updateCount.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
 
 		//getInitialState
 		this.state = {
@@ -36,6 +37,10 @@ class App extends React.Component{
   }
   addViewersToMessage(chatId, chatData) {
     this.props.addViewersToMessage(chatId, chatData);
+  }
+  leaveChat(chatId, chatData){
+    this.props.leaveChat(chatId, chatData);
+
   }
 
 
@@ -66,6 +71,7 @@ class App extends React.Component{
               updateCount={this.updateCount} 
               addMessage={this.addMessage}
               addViewersToMessage={this.addViewersToMessage}
+              leaveChat={this.leaveChat}
               {...params}
               />} 
 

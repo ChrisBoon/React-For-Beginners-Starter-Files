@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link } from 'react-router';
 
 class InviteUserToChat extends React.Component{
 
@@ -104,6 +104,10 @@ class InviteUserToChat extends React.Component{
               })
               .map(this.renderUser)}
           </ul>
+          <Link to={`/chat/${this.props.parentPath}`}>
+            <button>Cancel</button>
+          </Link>
+
           <button type="submit">Add users</button>
         </form>
 

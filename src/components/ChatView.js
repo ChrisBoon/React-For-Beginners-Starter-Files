@@ -11,6 +11,7 @@ class ChatView extends React.Component{
     this.renderMessage = this.renderMessage.bind(this);
     this.createMessage = this.createMessage.bind(this);
     this.addViewersToMessage = this.addViewersToMessage.bind(this);
+    this.leaveChat = this.leaveChat.bind(this);
     this.doesChatExist = this.doesChatExist.bind(this);
   }
 
@@ -50,6 +51,17 @@ class ChatView extends React.Component{
     this.context.router.transitionTo(`/chat/${this.props.params.chatId}`)
   }
 
+  leaveChat(){
+    const message = {
+      author: this.props.currentUser.userId,
+      dateCreated: Date.now(),
+      messageType: 'leave',
+      messageContent: [this.props.currentUser.userId]
+    }
+    this.props.leaveChat(this.props.params.chatId, message);
+    this.context.router.transitionTo(`/chat/`)
+  }
+
 
   render(){
     const chats = this.props.chats;
@@ -76,7 +88,7 @@ class ChatView extends React.Component{
                     <Link to={`/chat/${this.props.params.chatId}/invite`}>
                       <button>invite users</button>
                     </Link>
-                    <button>leave chat</button>
+                    <button onClick={this.leaveChat}>leave chat</button>
                 </div>
 
                 )}/>
