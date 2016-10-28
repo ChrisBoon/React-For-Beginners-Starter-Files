@@ -11,12 +11,22 @@ class ChatView extends React.Component{
     this.renderMessage = this.renderMessage.bind(this);
     this.createMessage = this.createMessage.bind(this);
     this.addViewersToMessage = this.addViewersToMessage.bind(this);
+    this.doesChatExist = this.doesChatExist.bind(this);
   }
 
   componentWillMount() {
-    this.props.updateCount(this.props.currentUser.userId,this.props.params.chatId);
+    if ( this.doesChatExist() ) {
+      this.props.updateCount(this.props.currentUser.userId,this.props.params.chatId);
+    }
   }
 
+  doesChatExist() {
+    const chats = this.props.chats;
+    const chatsArray = Object.keys(chats).map(key=>{return key});
+    if (chatsArray.includes(this.props.params.chatId)) {
+      return true;
+    }
+  }
 
   renderMessage(item) {
     const user = (this.props.users[item.author]);
@@ -44,45 +54,52 @@ class ChatView extends React.Component{
   render(){
     const chats = this.props.chats;
     const chat = chats[this.props.params.chatId];
-    console.log(this.props.params.chatId);
-    return(
-        <div className="op2-chatView">    
-          <h3 className="op2-chatView-heading">{chat.title}</h3>
-            <ul className="op2-chatView-messages">
-              {
-                chat.messages.map((key,i) => (
-                  <li className="op2-chatView-message" key={i}>
-                    {this.renderMessage(key)}
-                  </li>
-                ))
-              }
-            </ul>
-              <Match pattern={`/chat/:chatId`} exactly render={() => (
-                <div className="op2-chatView-controls">
-                  <Link to={`/chat/${this.props.params.chatId}/reply`}>
-                    add message
-                  </Link>
-                  <Link to={`/chat/${this.props.params.chatId}/invite`}>
-                    invite users
-                  </Link>
-              </div>
 
-              )}/>
-              
-              <Match pattern={`/chat/:chatId/reply`} component={(params) => <ReplyToMessage
-                author={this.props.currentUser.userId}
-                postReply={this.createMessage}
-              />}/>
+    if ( this.doesChatExist() ) {
+      return(
+          <div className="op2-chatView">    
+            <h3 className="op2-chatView-heading">{chat.title}</h3>
+              <ul className="op2-chatView-messages">
+                {
+                  chat.messages.map((key,i) => (
+                    <li className="op2-chatView-message" key={i}>
+                      {this.renderMessage(key)}
+                    </li>
+                  ))
+                }
+              </ul>
+                <Match pattern={`/chat/:chatId`} exactly render={() => (
+                  <div className="op2-chatView-controls">
+                    <Link to={`/chat/${this.props.params.chatId}/reply`}>
+                      add message
+                    </Link>
+                    <Link to={`/chat/${this.props.params.chatId}/invite`}>
+                      invite users
+                    </Link>
+                </div>
 
-              <Match pattern={`/chat/:chatId/invite`} component={(params) => <InviteUserToChat
-                chatData={chat}
-                users={this.props.users}
-                currentUser={this.props.currentUser}
-                addViewersToMessage={this.addViewersToMessage}
-              />}/>              
+                )}/>
+                
+                <Match pattern={`/chat/:chatId/reply`} component={(params) => <ReplyToMessage
+                  author={this.props.currentUser.userId}
+                  postReply={this.createMessage}
+                />}/>
 
-          </div>      
-    )
+                <Match pattern={`/chat/:chatId/invite`} component={(params) => <InviteUserToChat
+                  chatData={chat}
+                  users={this.props.users}
+                  currentUser={this.props.currentUser}
+                  addViewersToMessage={this.addViewersToMessage}
+                />}/>              
+
+            </div>      
+      )
+    } else {
+      return(
+        <div className="op2-chatView"> Sorry, this chat doesn't exist. Either it was deleted or you entered a bad URL. This message should be made more user-friendly</div>
+      )
+    }
+
 
   }
 }
