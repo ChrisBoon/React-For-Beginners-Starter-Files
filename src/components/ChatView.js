@@ -71,11 +71,12 @@ class ChatView extends React.Component{
                 <Match pattern={`/chat/:chatId`} exactly render={() => (
                   <div className="op2-chatView-controls">
                     <Link to={`/chat/${this.props.params.chatId}/reply`}>
-                      add message
+                      <button>add message</button>
                     </Link>
                     <Link to={`/chat/${this.props.params.chatId}/invite`}>
-                      invite users
+                      <button>invite users</button>
                     </Link>
+                    <button>leave chat</button>
                 </div>
 
                 )}/>
@@ -83,6 +84,7 @@ class ChatView extends React.Component{
                 <Match pattern={`/chat/:chatId/reply`} component={(params) => <ReplyToMessage
                   author={this.props.currentUser.userId}
                   postReply={this.createMessage}
+                  parentPath={this.props.params.chatId}
                 />}/>
 
                 <Match pattern={`/chat/:chatId/invite`} component={(params) => <InviteUserToChat
@@ -90,6 +92,7 @@ class ChatView extends React.Component{
                   users={this.props.users}
                   currentUser={this.props.currentUser}
                   addViewersToMessage={this.addViewersToMessage}
+                  parentPath={this.props.params.chatId}
                 />}/>              
 
             </div>      
