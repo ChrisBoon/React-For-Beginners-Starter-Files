@@ -79,12 +79,15 @@ class Root extends React.Component{
     //add chat to users userX.messageHistory:
     //for each new user
     for (const userId of chatData.messageContent) {
-      //add chatX to messageHistory with value of 0
-      if (users[userId].messageHistory) {
-        users[userId].messageHistory[chatId] = 0;
-      } else {
-        users[userId].messageHistory = {
-          [chatId]:0
+      // if user used to be in chat we shouldn't reset their count
+      if (! users[userId].messageHistory[chatId]) {
+        //add chatX to messageHistory with value of 0
+        if (users[userId].messageHistory) {
+          users[userId].messageHistory[chatId] = 0;
+        } else {
+          users[userId].messageHistory = {
+            [chatId]:0
+          }
         }
       }
     }
