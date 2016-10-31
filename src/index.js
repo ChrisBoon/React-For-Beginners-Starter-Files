@@ -14,6 +14,7 @@ import Dashboard from './components/Dashboard';
 import App from './components/App';
 import NotFound from './components/NotFound';
 import SwitchUser from './components/SwitchUser';
+import NewChat from './components/NewChat';
 
 class Root extends React.Component{
   constructor() {
@@ -175,11 +176,26 @@ class Root extends React.Component{
                     />
           }/>
 
-          <Match pattern="/switch" component={() => <SwitchUser 
+          <Match pattern="/switch" exactly component={
+            () => 
+            <SwitchUser 
             user={user} 
             allUsers={this.state.v1.users} 
-            changeUser={this.changeUser} /> } />
+            changeUser={this.changeUser} /> 
+          }/>
+
+
+
+          <Match pattern={`/new-chat`} exactly component={
+            () => 
+            <NewChat 
+              user={user} 
+              allUsers={this.state.v1.users} />
+          }/>
+
           <Miss component={() => <NotFound user={user}/>}/>
+
+
         </div>
       </BrowserRouter>
     )    
