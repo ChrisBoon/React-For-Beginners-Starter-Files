@@ -1,4 +1,6 @@
 import React from 'react';
+import { Link } from 'react-router';
+
 import ChatLatest from './ChatLatest';
 
 class ChatList extends React.Component{
@@ -36,7 +38,9 @@ class ChatList extends React.Component{
       return(
         <div className="op2-chatList">
           <div className="chatList-controls">
-            <button>New Chat</button>
+            <Link to={`/new-chat`}>
+              <button>New Chat</button>
+            </Link>
           </div>
           <ul>
             {
