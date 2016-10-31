@@ -189,8 +189,8 @@ class Root extends React.Component{
           <Match pattern={`/new-chat`} exactly component={
             () => 
             <NewChat 
-              user={user} 
-              allUsers={this.state.v1.users} />
+              currentUser={user} 
+              users={this.state.v1.users} />
           }/>
 
           <Miss component={() => <NotFound user={user}/>}/>
