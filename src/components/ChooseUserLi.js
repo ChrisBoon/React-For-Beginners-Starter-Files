@@ -8,11 +8,13 @@ class ChooseUserLi extends React.Component{
   }
 
   handleChange(event) {
+    let changeType;
     if (event.target.checked) {
-      this.props.updateStatus('add', event.target.name)
+      changeType = 'add';
     } else {
-      this.props.updateStatus('remove', event.target.name)
+      changeType = 'remove';
     }
+    this.props.updateStatus(changeType, event.target.name)
   }
 
 	render(){
