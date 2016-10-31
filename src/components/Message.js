@@ -24,7 +24,7 @@ class Message extends React.Component{
             <span key={i}>
               <span className="user-chip">
                 <span className="avatar-container">
-                  <img src={this.props.users[value].image} className="avatar-img"/>
+                  <img src={this.props.users[value].image} className="avatar-img" role="presentation"/>
                 </span>
                 {this.props.users[value].name}
               </span>
@@ -34,8 +34,6 @@ class Message extends React.Component{
         }
       );
 
-      const newUsers = this.props.content.slice(0, -1).join(',')+' and '+this.props.content.slice(-1);
-
       message = <p className="op2-chatMessage-text">{this.props.name} invited {userNames} to the chat</p>
     }
     else if (this.props.type ==='leave') {
@@ -44,7 +42,7 @@ class Message extends React.Component{
       message = <p className="op2-chatMessage-text">
               <span className="user-chip">
                 <span className="avatar-container">
-                  <img src={this.props.avatar} className="avatar-img"/>
+                  <img src={this.props.avatar} className="avatar-img" role="presentation"/>
                 </span>
                 {this.props.name}
               </span> has left this Chat.</p>
@@ -54,7 +52,7 @@ class Message extends React.Component{
     if(this.props.type ==='text'|| this.props.type ==='addViewer'|| this.props.type ==='leave'){
       content = <div className="op2-chatMessage">
                   <div className="avatar-container">
-                    <img src={this.props.avatar} alt={this.props.username} className="avatar-img"/>
+                    <img src={this.props.avatar} alt={this.props.username} className="avatar-img" role="presentation"/>
                   </div>
                   <div className="op2-chatMessage-content">
                     <p className="op2-chatMessage-meta">
