@@ -119,16 +119,20 @@ class Root extends React.Component{
     //for each new user
     for (const userId of chatData.messageContent) {
       // if user used to be in chat we shouldn't reset their count
-      if (! users[userId].messageHistory[chatId]) {
-        //add chatX to messageHistory with value of 0
-        if (users[userId].messageHistory) {
-          users[userId].messageHistory[chatId] = 0;
-        } else {
+
+      //if user has no messageHistory:
+      if (!users[userId].messageHistory) {
+        // create MessageHistory object and set current chat
           users[userId].messageHistory = {
             [chatId]:0
-          }
-        }
+          } 
+      } 
+      // if user has messageHistory and has not got history for this chat
+      else if (users[userId].messageHistory && ! users[userId].messageHistory[chatId]) {
+        users[userId].messageHistory[chatId] = 0;
       }
+
+
     }
 
     //add chosen users to chatX.viewers list
