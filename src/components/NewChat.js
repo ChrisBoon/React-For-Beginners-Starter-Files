@@ -85,6 +85,7 @@ class NewChat extends React.Component{
         message: message
       };
       this.props.addChat(chatFragment);
+      this.context.router.transitionTo(`/chat/chat${time}`)
 
     }
   }  
@@ -135,6 +136,9 @@ class NewChat extends React.Component{
       </div>
 		)
 	}
+}
+NewChat.contextTypes = {
+  router: React.PropTypes.object
 }
 
 export default NewChat;
