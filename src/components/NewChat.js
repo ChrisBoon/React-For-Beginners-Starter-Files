@@ -62,6 +62,26 @@ class NewChat extends React.Component{
     )
   }
 
+  addChat(event) {
+    event.preventDefault();
+    const time = Date.now();
+
+    const message = {
+      author: this.props.currentUser.userId,
+      dateCreated: time,
+      messageType: 'text',
+      messageContent: this.message.value
+    };
+
+    const chatFragment = {
+      title: this.title.value,
+      viewers: this.state.addedUsers,
+      message: message
+    };
+
+    this.props.addChat(chatFragment);
+  }  
+
 	render(){
     const addedUsers = this.state.addedUsers;
 
@@ -76,8 +96,12 @@ class NewChat extends React.Component{
         <div className="content-container">
     			<div className="op2-newChat">
           {showUserList}
-          <form>
+          <form
+            ref={(input) => this.addChatForm = input} 
+            onSubmit={ (e) => this.addChat(e) }>
+
             <button onClick={(e) => this.toggleUserList(e)}>To:</button>
+
             <div className="newChatSelectedUsers">
               {
                 addedUsers.map(
@@ -87,9 +111,12 @@ class NewChat extends React.Component{
                 )
               }
             </div>
+
             <label>
-              <span>Title: </span><input type="text"/>
+              <span>Title: </span>
+              <input ref={(input) => this.title = input} type="text" placeholder="Chat title..." required />
             </label>
+
             <textarea ref={(input) => this.message = input} placeholder="Write a message..." required ></textarea>
             <Link to={`/chat`}>
               <button>Cancel</button>

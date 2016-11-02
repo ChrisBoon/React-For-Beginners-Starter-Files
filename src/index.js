@@ -26,6 +26,7 @@ class Root extends React.Component{
     this.changeUser = this.changeUser.bind(this);
     this.resetData = this.resetData.bind(this);
     this.leaveChat = this.leaveChat.bind(this);
+    this.addChat = this.addChat.bind(this);
 
     this.state = {
       v1: {
@@ -54,8 +55,45 @@ class Root extends React.Component{
     // }
   }
 
+  addChat(chatData) {
+    //get copy of current state
+    const v1 = {...this.state.v1};
+    //get date created
+    const chatDate = chatData.message.dateCreated;
+
+    //create new chat object
+    const chat = {
+      chatId: `chat${chatDate}`,
+      title: chatData.title,
+      dateCreated: chatDate,
+      count: 1,
+      viewers: chatData.viewers,
+      messages: [chatData.message]
+    };
+    //add it to v1 copy:
+    v1.chats[chat.chatId] = chat;
+
+
+    //add chat to users userX.messageHistory:
+    const users = v1.users;
+    //for each new user
+    for (const userId of chatData.viewers) {
+      //add chatX to messageHistory with value of 1
+      if (users[userId].messageHistory) {
+        users[userId].messageHistory[chat.chatId] = 1;
+      } else {
+        users[userId].messageHistory = {
+          [chat.chatId]: 1
+        }
+      }
+    }
+    
+    //set state
+    this.setState({ v1 });
+  }
+
   addMessage(chatId, chatData) {
-    // get copy of current chat
+    //get copy of current state
     const v1 = {...this.state.v1}
     const chat = v1.chats[chatId];
     //push message to chat
@@ -190,7 +228,8 @@ class Root extends React.Component{
             () => 
             <NewChat 
               currentUser={user} 
-              users={this.state.v1.users} />
+              users={this.state.v1.users} 
+              addChat={this.addChat}/>
           }/>
 
           <Miss component={() => <NotFound user={user}/>}/>
