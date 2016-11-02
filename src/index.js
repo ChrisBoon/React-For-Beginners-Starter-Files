@@ -87,7 +87,6 @@ class Root extends React.Component{
         }
       }
     }
-    
     //set state
     this.setState({ v1 });
   }
@@ -182,12 +181,13 @@ class Root extends React.Component{
   }
 
   resetData() {
-    this.setState({
-      v1: {
-        users: importUsers,
-        chats: importChats
-      }
-    })
+    const setNull = null;
+    const v1 = {
+      users: importUsers,
+      chats: importChats
+    };
+    this.setState({ v1: setNull });
+    this.setState({ v1 });
   }
 
   changeUser(userId) {
