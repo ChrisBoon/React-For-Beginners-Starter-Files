@@ -64,22 +64,29 @@ class NewChat extends React.Component{
 
   addChat(event) {
     event.preventDefault();
-    const time = Date.now();
+    console.log(this.state.addedUsers.length)
+    const usersAdded = this.state.addedUsers.length > 0 ? true : false
+    if (! usersAdded) {
+      alert(`oops, looks like you forgot to choose who to send this Chat to!`)
+    } else {
 
-    const message = {
-      author: this.props.currentUser.userId,
-      dateCreated: time,
-      messageType: 'text',
-      messageContent: this.message.value
-    };
+      const time = Date.now();
 
-    const chatFragment = {
-      title: this.title.value,
-      viewers: this.state.addedUsers,
-      message: message
-    };
+      const message = {
+        author: this.props.currentUser.userId,
+        dateCreated: time,
+        messageType: 'text',
+        messageContent: this.message.value
+      };
 
-    this.props.addChat(chatFragment);
+      const chatFragment = {
+        title: this.title.value,
+        viewers: [...this.state.addedUsers, message.author],
+        message: message
+      };
+      this.props.addChat(chatFragment);
+
+    }
   }  
 
 	render(){
