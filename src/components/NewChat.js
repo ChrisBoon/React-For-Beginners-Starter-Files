@@ -10,8 +10,11 @@ class NewChat extends React.Component{
     super();
     this.renderUserList = this.renderUserList.bind(this);
     this.toggleUserList = this.toggleUserList.bind(this);
+    this.updateStatus = this.updateStatus.bind(this);
+
     this.state = {
-      isUserListOpen: false
+      isUserListOpen: false,
+      addedUsers: []
     }
   }
 
@@ -22,13 +25,29 @@ class NewChat extends React.Component{
     })
   }
 
+  updateStatus(status,userId) {
+    const addedUsers = this.state.addedUsers.slice();
+    if (status ==='add') {
+      addedUsers.push(userId);
+    } else {
+      const i = addedUsers.indexOf(userId);
+      if(i !== -1) {
+        addedUsers.splice(i, 1);
+      }
+    }
+    this.setState({
+      addedUsers
+    });
+
+  }
+
   renderUserList() {
     return(
       <div className="c-newchat-addUsers modal">
         <form
         ref={(input) => this.addViewerForm = input} 
         onSubmit={ (e) => this.inviteUsers(e) }>
-        {console.log(this.props.currentUser)}
+
           <ChooseUser
             currentUser={this.props.currentUser}
             viewers={[]}
@@ -36,9 +55,7 @@ class NewChat extends React.Component{
             updateStatus={this.updateStatus}
             addedUsers={this.state.addedUsers}/>
 
-            <button onClick={(e) => this.toggleUserList(e)}>Cancel</button>
-
-          <button type="submit">Add users</button>
+          <button onClick={(e) => this.toggleUserList(e)}>Close</button>
         </form>
 
       </div>
@@ -46,6 +63,8 @@ class NewChat extends React.Component{
   }
 
 	render(){
+    const addedUsers = this.state.addedUsers;
+
     let showUserList;
     if (this.state.isUserListOpen) {
       showUserList = this.renderUserList()
@@ -60,7 +79,13 @@ class NewChat extends React.Component{
           <form>
             <button onClick={(e) => this.toggleUserList(e)}>To:</button>
             <div className="newChatSelectedUsers">
-
+              {
+                addedUsers.map(
+                  item => {
+                    return <div key={item}>{item}</div>
+                  }
+                )
+              }
             </div>
             <label>
               <span>Title: </span><input type="text"/>

@@ -20,7 +20,7 @@ class ChooseUserLi extends React.Component{
 	render(){
     const renderedUser = this.props.renderedUser
     const alreadyWatching = this.props.alreadyWatching;
-    const key = this.props.myKey;
+    const key = this.props.renderedUser.userId;
 
     let includeToggle;
     if (!alreadyWatching) {
@@ -29,6 +29,7 @@ class ChooseUserLi extends React.Component{
           name={key}
           onChange={this.handleChange}
           ref={(input)=>{this[key] = input}}
+          checked={this.props.alreadyChecked}
           />
     }
     

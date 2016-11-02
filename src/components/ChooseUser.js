@@ -26,12 +26,13 @@ class ChooseUser extends React.Component{
     const users = this.props.users;
     const renderedUser = users[key];
     const alreadyWatching = this.props.viewers.includes(renderedUser.userId);
+    const alreadyChecked = this.props.addedUsers.includes(renderedUser.userId);
 
     return <ChooseUserLi
             key={key}
             renderedUser={renderedUser}
             alreadyWatching={alreadyWatching}
-            myKey={key}
+            alreadyChecked={alreadyChecked}
             updateStatus={this.updateStatus}
             />
   }  
