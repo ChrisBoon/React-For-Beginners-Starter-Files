@@ -78,12 +78,12 @@ class Root extends React.Component{
     const users = v1.users;
     //for each new user
     for (const userId of chatData.viewers) {
-      //add chatX to messageHistory with value of 1
+      //add chatX to messageHistory with value of 1 or 0
       if (users[userId].messageHistory) {
-        users[userId].messageHistory[chat.chatId] = 1;
+        users[userId].messageHistory[chat.chatId] = 0;
       } else {
         users[userId].messageHistory = {
-          [chat.chatId]: 1
+          [chat.chatId]: 0
         }
       }
     }
