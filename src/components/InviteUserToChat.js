@@ -45,6 +45,7 @@ class InviteUserToChat extends React.Component{
 
   render(){
     const users = this.props.users;
+    const isAddUsersButtonDisabled = this.state.addedUsers.length>0 ? false : true;
 
     return(
       <div className="c-invite modal">
@@ -63,7 +64,7 @@ class InviteUserToChat extends React.Component{
             <button>Cancel</button>
           </Link>
 
-          <button type="submit">Add users</button>
+          <button type="submit" disabled={isAddUsersButtonDisabled}>Add users</button>
         </form>
 
       </div>
