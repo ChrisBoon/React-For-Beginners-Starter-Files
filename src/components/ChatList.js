@@ -44,7 +44,22 @@ class ChatList extends React.Component{
           </div>
           <ul>
             {
-              Object.keys(chats).map(this.renderMessages)
+              Object
+                .keys(chats)
+                .sort(
+                  (a,b) => { 
+                    const dateA = chats[a].messages[chats[a].messages.length-1].dateCreated,
+                      dateB = chats[b].messages[chats[b].messages.length-1].dateCreated;
+                    if (dateA < dateB) {
+                      return 1;
+                    }
+                    if (dateA > dateB) {
+                      return -1;
+                    }
+                    return 0;
+                  }
+                )
+                .map(this.renderMessages)
             }       
           </ul>
         </div>
