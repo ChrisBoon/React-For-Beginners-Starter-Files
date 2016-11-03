@@ -10,6 +10,7 @@ class ChatList extends React.Component{
     this.renderMessages = this.renderMessages.bind(this);
     this.filterAccess = this.filterAccess.bind(this);
     this.setViewAll = this.setViewAll.bind(this);
+    this.deleteChat = this.deleteChat.bind(this);
     this.state = {
       viewAll: {
         set: false
@@ -34,6 +35,8 @@ class ChatList extends React.Component{
           dateCreated={chats[key].dateCreated}
           count={unreadCount}
           messages={chats[key].messages}
+          currentUser={this.props.currentUser}
+          deleteChat={this.props.deleteChat}
         />
       )  
   }
@@ -59,7 +62,10 @@ class ChatList extends React.Component{
       this.context.router.transitionTo(`/chat`)
     }
     this.setState({viewAll})
-
+  }
+  deleteChat(chatId){
+    console.log(chatId)
+    this.props.deleteChat(chatId);
   }
 	render(){
     const chats = this.props.chats;

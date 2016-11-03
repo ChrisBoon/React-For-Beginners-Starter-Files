@@ -27,11 +27,13 @@ class Root extends React.Component{
     this.resetData = this.resetData.bind(this);
     this.leaveChat = this.leaveChat.bind(this);
     this.addChat = this.addChat.bind(this);
+    this.deleteChat = this.deleteChat.bind(this);
 
     this.state = {
       v1: {
         chats: {},
-        users: {}
+        users: {},
+        deletedChats: {}
       },
       currentUser: ""
     }
@@ -40,7 +42,7 @@ class Root extends React.Component{
   componentWillMount() {
     let signedInAs = null;
     this.setState({
-      currentUser: signedInAs || importUsers['u52hd7s']
+      currentUser: signedInAs || importUsers['u1sss1s']
     })
     this.ref = base.syncState(`/v1`,{
       context: this,
@@ -196,6 +198,29 @@ class Root extends React.Component{
     }
   }
 
+  deleteChat(chatId) {
+    //get copy of current state
+    const v1 = {...this.state.v1}
+    if (!v1.deletedChats) {
+      v1.deletedChats = [];
+    }
+    //add chatId to list of deleted chats
+    v1.deletedChats.push(chatId);
+
+    //delete the chat
+    v1.chats[chatId] = null;
+
+    //should it stay in users messageHistory? Probably not.
+    for (const user in v1.users) {
+      if(user.messageHistory && user.messageHistory[chatId]){
+        user.messageHistory[chatId] = null;
+      }
+    }
+    //update current state
+    this.setState({ v1 });
+
+  }
+
   resetData() {
     const setNull = null;
     const v1 = {
@@ -227,6 +252,7 @@ class Root extends React.Component{
                     addViewersToMessage={this.addViewersToMessage}
                     allUsers={this.state.v1.users}
                     leaveChat={this.leaveChat}
+                    deleteChat={this.deleteChat}
                     />
           }/>
 

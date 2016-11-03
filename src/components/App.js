@@ -15,6 +15,7 @@ class App extends React.Component{
     this.addViewersToMessage = this.addViewersToMessage.bind(this);
     this.updateCount = this.updateCount.bind(this);
     this.leaveChat = this.leaveChat.bind(this);
+    this.deleteChat = this.deleteChat.bind(this);
 
 		//getInitialState
 		this.state = {
@@ -42,7 +43,9 @@ class App extends React.Component{
     this.props.leaveChat(chatId, chatData);
 
   }
-
+  deleteChat(chatId){
+    this.props.deleteChat(chatId);
+  }
 
 	render(){
       let content;
@@ -58,6 +61,7 @@ class App extends React.Component{
               users={this.props.allUsers}
               chats={this.props.chats}
               currentUser={this.props.user}
+              deleteChat={this.props.deleteChat}
             />
 
             <Match pattern={`/chat/`} exactly render={
