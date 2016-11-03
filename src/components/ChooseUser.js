@@ -5,6 +5,7 @@ class ChooseUser extends React.Component{
   constructor() {
     super();
     this.stripSelf = this.stripSelf.bind(this);
+    this.inClass = this.inClass.bind(this);
     this.renderUsers = this.renderUsers.bind(this);
     this.updateStatus = this.updateStatus.bind(this);
     this.parseUsers = this.parseUsers.bind(this);
@@ -16,6 +17,16 @@ class ChooseUser extends React.Component{
     } else {
       return true
     }
+  }
+
+  inClass(obj){
+    const users = this.props.users;
+    if (users[obj].inClass) {
+      return true
+    } else {
+      return false
+    }
+
   }
 
   updateStatus(status,userId) {
@@ -43,6 +54,7 @@ class ChooseUser extends React.Component{
     return Object
       .keys(users)
       .filter(this.stripSelf)
+      .filter(this.inClass)
       .sort((a,b) => { 
         const nameA = users[a].name,
               nameB = users[b].name;
