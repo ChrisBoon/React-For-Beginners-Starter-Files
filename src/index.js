@@ -40,7 +40,7 @@ class Root extends React.Component{
   componentWillMount() {
     let signedInAs = null;
     this.setState({
-      currentUser: signedInAs || importUsers['u545sdd']
+      currentUser: signedInAs || importUsers['u52hd7s']
     })
     this.ref = base.syncState(`/v1`,{
       context: this,
