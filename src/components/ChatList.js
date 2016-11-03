@@ -56,6 +56,7 @@ class ChatList extends React.Component{
       viewAll.set = true
     } else {
       viewAll.set = false
+      this.context.router.transitionTo(`/chat`)
     }
     this.setState({viewAll})
 
@@ -76,7 +77,7 @@ class ChatList extends React.Component{
                                 </label>
                             </div>
     }
-    if (this.props.users[this.props.currentUser.userId].messageHistory || this.state.viewAll) {
+    if (this.props.users[this.props.currentUser.userId].messageHistory || this.state.viewAll.set) {
       return(
         <div className="op2-chatList">
           <div className="chatList-controls">
@@ -128,6 +129,10 @@ ChatList.propTypes = {
   users: React.PropTypes.object.isRequired,
   currentUser: React.PropTypes.object.isRequired,
 	chats: React.PropTypes.object.isRequired,
+}
+
+ChatList.contextTypes = {
+  router: React.PropTypes.object
 }
 
 export default ChatList;
