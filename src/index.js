@@ -176,10 +176,22 @@ class Root extends React.Component{
   }  
 
   updateCount(userId, chatId) {
-    const v1 = {...this.state.v1}
+    //updates Users count to match total message count in currenty viewed Chat
+    //Called by ChatView.js on ComponentWillMount
+
+    //get copy of current state
+    let v1 = {...this.state.v1}
+    //check user exists (why? ...maye I can delete this)
     if (v1.users[userId]) {
+      //get total count of current Chat
       const newCount = v1.chats[chatId].count;
-      v1.users[userId]['messageHistory'][chatId] = newCount;
+      //get ref to current users messageHistory. If they don't have any messageHistory at all we provide an empty object
+      let userHistory = v1.users[userId]['messageHistory'] || {};
+      //set chat count in copy of users messageHistory to current chat count
+      userHistory[chatId] =newCount;
+      //set copy of state's messageHistory to equal the new copy we just made
+      v1.users[userId]['messageHistory'] = {...userHistory};
+      //update current state
       this.setState({ v1 });
     }
   }
