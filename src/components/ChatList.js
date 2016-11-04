@@ -64,8 +64,15 @@ class ChatList extends React.Component{
     this.setState({viewAll})
   }
   deleteChat(chatId){
-    console.log(chatId)
+    //delete the chat
     this.props.deleteChat(chatId);
+    //redirect to main chat page
+    this.context.router.transitionTo(`/chat`)
+    //retain admin mode?
+    //'deleted' message?
+    //are you sure? prompt?
+    //all chats deleted edge case
+    //direct url to deleted chat to mention if it's been deleted?
   }
 	render(){
     const chats = this.props.chats;
