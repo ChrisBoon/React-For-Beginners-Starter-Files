@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import Header from './Header';
-import ChooseUser from './ChooseUser';
+import ChooseUserContainer from './ChooseUserContainer';
 
 class NewChat extends React.Component{
 
@@ -48,7 +48,7 @@ class NewChat extends React.Component{
         ref={(input) => this.addViewerForm = input} 
         onSubmit={ (e) => this.inviteUsers(e) }>
 
-          <ChooseUser
+          <ChooseUserContainer
             currentUser={this.props.currentUser}
             viewers={[]}
             users={this.props.users} 

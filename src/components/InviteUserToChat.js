@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
-import ChooseUser from './ChooseUser';
+import ChooseUserContainer from './ChooseUserContainer';
 
 
 class InviteUserToChat extends React.Component{
@@ -53,7 +53,7 @@ class InviteUserToChat extends React.Component{
         ref={(input) => this.addViewerForm = input} 
         onSubmit={ (e) => this.inviteUsers(e) }>
 
-          <ChooseUser
+          <ChooseUserContainer
             currentUser={this.props.currentUser}
             viewers={this.props.chatData.viewers}
             users={users} 
