@@ -69,7 +69,7 @@ class ChooseUserContainer extends React.Component{
   }
 
   render(){
-    return <ul className={ChooseUser}>{this.parseUsers().map(this.renderUsers)}</ul>
+    return <ul className={"ChooseUser"}>{this.parseUsers().map(this.renderUsers)}</ul>
   }
 }
 

@@ -154,6 +154,9 @@ select {
 * {
   box-sizing: border-box;
 }
+.ChooseUser {
+  background: #f00;
+}
 html {
   font-size: 62.5%;
 }
