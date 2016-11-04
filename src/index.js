@@ -20,7 +20,7 @@ class Root extends React.Component{
   constructor() {
     super();
 
-    this.setUser = this.setUser.bind(this);
+    this.initApp = this.initApp.bind(this);
     this.updateCount = this.updateCount.bind(this);
     this.addMessage = this.addMessage.bind(this);
     this.addViewersToMessage = this.addViewersToMessage.bind(this);
@@ -29,6 +29,7 @@ class Root extends React.Component{
     this.leaveChat = this.leaveChat.bind(this);
     this.addChat = this.addChat.bind(this);
     this.deleteChat = this.deleteChat.bind(this);
+    this.updateUserMessageHistory = this.updateUserMessageHistory.bind(this);
 
     this.state = {
       v1: {
@@ -41,37 +42,37 @@ class Root extends React.Component{
     }
   }
 
-  setUser() {
+  initApp() {
+    // called once rebase callback confirms app is in sync with firebase
+
+    // check localStorage to see if we've already chosen a user
+    // firebase has synced and we have checked localStorage so now we can display the App and set this.state.currentUser
     const signedInAs = localStorage.getItem(`v1-signedInAs`);
     this.setState({
       loading: false,
       currentUser: this.state.v1.users[signedInAs] || this.state.v1.users['u1sss1s']
     });
-    console.log(this.state)
   }
 
   componentWillMount() {
+    // sync with firebase for bidirectional changes and call initApp() once done
     this.ref = base.syncState(`/v1`,{
       context: this,
       state: 'v1',
-      then: e=> {this.setUser()}
+      then: e=> {this.initApp()}
     })
-
-    // console.log(this.state.users)
-    // if (!this.state.users[0]) {
-    //   this.setState({
-    //     users: importUsers
-    //   })
-    // }
   }
 
   addChat(chatData) {
-    //get copy of current state
+    // function for creating a totally new Chat thread
+    // bubbles up from NewChat: Root => NewChat.
+
+    // get copy of current state
     const v1 = {...this.state.v1};
     //get date created
     const chatDate = chatData.message.dateCreated;
 
-    //create new chat object
+    // create new chat object
     const chat = {
       chatId: `chat${chatDate}`,
       title: chatData.title,
@@ -80,40 +81,43 @@ class Root extends React.Component{
       viewers: chatData.viewers,
       messages: [chatData.message]
     };
-    //add it to v1 copy:
+    // add it to v1 copy:
     v1.chats[chat.chatId] = chat;
 
-
-    //add chat to users userX.messageHistory:
-    const users = v1.users;
-    //for each new user
-    for (const userId of chatData.viewers) {
-      //add chatX to messageHistory with value of 1 or 0
-      if (users[userId].messageHistory) {
-        users[userId].messageHistory[chat.chatId] = 0;
-      } else {
-        users[userId].messageHistory = {
-          [chat.chatId]: 0
-        }
-      }
-    }
-    //set state
+    // set state
     this.setState({ v1 });
+
+    // add chat to users userX.messageHistory:
+    for (const userId of chatData.viewers) {
+      this.updateUserMessageHistory(userId,chat.chatId,0)
+    }
   }
 
   addMessage(chatId, chatData) {
-    //get copy of current state
+    // function for replying to an existing Chat thread
+    // bubbles up from ReplyToMessage: Root => App => ChatView => ReplyToMessage.
+
+    // get copy of current state
     const v1 = {...this.state.v1}
+
+    // get current chat data
     const chat = v1.chats[chatId];
-    //push message to chat
+
+    // push new message to chat
     chat.messages.push(chatData);
-    //update message count
+
+    // update message count in chat
     chat.count = chat.count + 1 || 1;
-    //add author to 'watch' list
+
+    // Add author to 'watch' list for chat.
+    // This would only be needed for a Teacher as they can access a Chat
+    // without being 'invited', via 'admin mode'.
+    // If they post a message they should get invited from then on.
     if (!chat.viewers.includes(chatData.author)) {
       chat.viewers.push(chatData.author);
     }
-    //set state
+
+    // set state
     this.setState({ v1 });
   }
 
@@ -124,26 +128,6 @@ class Root extends React.Component{
     const chat = v1.chats[chatId];
     let viewers = chat.viewers;
     const users = v1.users;
-
-    //add chat to users userX.messageHistory:
-    //for each new user
-    for (const userId of chatData.messageContent) {
-      // if user used to be in chat we shouldn't reset their count
-
-      //if user has no messageHistory:
-      if (!users[userId].messageHistory) {
-        // create MessageHistory object and set current chat
-          users[userId].messageHistory = {
-            [chatId]:0
-          } 
-      } 
-      // if user has messageHistory and has not got history for this chat
-      else if (users[userId].messageHistory && ! users[userId].messageHistory[chatId]) {
-        users[userId].messageHistory[chatId] = 0;
-      }
-
-
-    }
 
     //add chosen users to chatX.viewers list
     const allViewers = viewers.concat(chatData.messageContent);
@@ -158,6 +142,18 @@ class Root extends React.Component{
     //set state
     this.setState({ v1 });
 
+    //add chat to users userX.messageHistory:
+    //for each new user
+    for (const userId of chatData.messageContent) {
+      // if user used to be in chat we shouldn't reset their count
+      let count = 0;
+      if (users[userId].messageHistory) {
+        if (users[userId].messageHistory[chatId]) {
+          count = users[userId].messageHistory[chatId]
+        }
+      }
+      this.updateUserMessageHistory(userId,chatId,count)
+    }
   }
 
   leaveChat(chatId, chatData){
@@ -188,24 +184,23 @@ class Root extends React.Component{
   updateCount(userId, chatId) {
     //updates Users count to match total message count in currenty viewed Chat
     //Called by ChatView.js on ComponentWillMount
-
-    //get copy of current state
-    let v1 = {...this.state.v1}
-    //check user exists (why? ...maye I can delete this)
-    if (v1.users[userId]) {
-      //get total count of current Chat
-      const newCount = v1.chats[chatId].count;
-      //get ref to current users messageHistory. If they don't have any messageHistory at all we provide an empty object
-      let userHistory = v1.users[userId]['messageHistory'] || {};
-      //set chat count in copy of users messageHistory to current chat count
-      userHistory[chatId] =newCount;
-      //set copy of state's messageHistory to equal the new copy we just made
-      v1.users[userId]['messageHistory'] = {...userHistory};
-      //update current state
-      this.setState({ v1 });
-    }
+    const newCount = this.state.v1.chats[chatId].count;
+    this.updateUserMessageHistory(userId,chatId,newCount)
   }
 
+  updateUserMessageHistory(userId,chatId,count) {
+    // called by various functions in index.
+
+    const v1 = {...this.state.v1};
+    // set userHistory equal to current users messageHistory or empty object
+    let userHistory = v1.users[userId]['messageHistory'] || {};
+    // set chat count in copy of users messageHistory to current chat count
+    userHistory[chatId] =count;
+    // set copy of state's messageHistory to equal the new copy we just made
+    v1.users[userId]['messageHistory'] = {...userHistory};
+    // set state
+    this.setState({ v1 });
+  }
   deleteChat(chatId) {
     //get copy of current state
     const v1 = {...this.state.v1}
@@ -242,7 +237,6 @@ class Root extends React.Component{
   changeUser(userId) {
     const currentUser = this.state.v1.users[userId];
     this.setState({currentUser});
-    console.log(`don't forget to persist to local storage at some point`);
     localStorage.setItem(`v1-signedInAs`,currentUser.userId);
   }
 
