@@ -20,6 +20,7 @@ class Root extends React.Component{
   constructor() {
     super();
 
+    this.setUser = this.setUser.bind(this);
     this.updateCount = this.updateCount.bind(this);
     this.addMessage = this.addMessage.bind(this);
     this.addViewersToMessage = this.addViewersToMessage.bind(this);
@@ -35,18 +36,25 @@ class Root extends React.Component{
         users: {},
         deletedChats: {}
       },
-      currentUser: ""
+      currentUser: {},
+      loading: true
     }
   }
 
-  componentWillMount() {
-    let signedInAs = null;
+  setUser() {
+    const signedInAs = localStorage.getItem(`v1-signedInAs`);
     this.setState({
-      currentUser: signedInAs || importUsers['u1sss1s']
-    })
+      loading: false,
+      currentUser: this.state.v1.users[signedInAs] || this.state.v1.users['u1sss1s']
+    });
+    console.log(this.state)
+  }
+
+  componentWillMount() {
     this.ref = base.syncState(`/v1`,{
       context: this,
-      state: 'v1'
+      state: 'v1',
+      then: e=> {this.setUser()}
     })
 
     // console.log(this.state.users)
@@ -235,51 +243,56 @@ class Root extends React.Component{
     const currentUser = this.state.v1.users[userId];
     this.setState({currentUser});
     console.log(`don't forget to persist to local storage at some point`);
+    localStorage.setItem(`v1-signedInAs`,currentUser.userId);
   }
 
   render(){
-    const user = this.state.currentUser;
-    return (
-      <BrowserRouter>
-        <div>
-          <Match exactly pattern="/" component={() => <Dashboard user={user}/>}/>
-          <Match pattern="/chat" component={
-            () => <App 
-                    updateCount={this.updateCount} 
-                    user={user} 
-                    chats={this.state.v1.chats} 
-                    addMessage={this.addMessage}
-                    addViewersToMessage={this.addViewersToMessage}
-                    allUsers={this.state.v1.users}
-                    leaveChat={this.leaveChat}
-                    deleteChat={this.deleteChat}
-                    />
-          }/>
+    if (!this.state.loading) {
+      const user = this.state.currentUser;
+      return (
+        <BrowserRouter>
+          <div>
+            <Match exactly pattern="/" component={() => <Dashboard user={user}/>}/>
+            <Match pattern="/chat" component={
+              () => <App 
+                      updateCount={this.updateCount} 
+                      user={user} 
+                      chats={this.state.v1.chats} 
+                      addMessage={this.addMessage}
+                      addViewersToMessage={this.addViewersToMessage}
+                      allUsers={this.state.v1.users}
+                      leaveChat={this.leaveChat}
+                      deleteChat={this.deleteChat}
+                      />
+            }/>
 
-          <Match pattern="/switch" exactly component={
-            () => 
-            <SwitchUser 
-            user={user} 
-            allUsers={this.state.v1.users} 
-            changeUser={this.changeUser} /> 
-          }/>
-
-
-
-          <Match pattern={`/new-chat`} exactly component={
-            () => 
-            <NewChat 
-              currentUser={user} 
-              users={this.state.v1.users} 
-              addChat={this.addChat}/>
-          }/>
-
-          <Miss component={() => <NotFound user={user}/>}/>
+            <Match pattern="/switch" exactly component={
+              () => 
+              <SwitchUser 
+              user={user} 
+              allUsers={this.state.v1.users} 
+              changeUser={this.changeUser} /> 
+            }/>
 
 
-        </div>
-      </BrowserRouter>
-    )    
+
+            <Match pattern={`/new-chat`} exactly component={
+              () => 
+              <NewChat 
+                currentUser={user} 
+                users={this.state.v1.users} 
+                addChat={this.addChat}/>
+            }/>
+
+            <Miss component={() => <NotFound user={user}/>}/>
+
+
+          </div>
+        </BrowserRouter>
+      )    
+    } else{
+      return <p>loading</p>
+    }
   }
 
 }
