@@ -16,10 +16,12 @@ class App extends React.Component{
     this.updateCount = this.updateCount.bind(this);
     this.leaveChat = this.leaveChat.bind(this);
     this.deleteChat = this.deleteChat.bind(this);
+    this.handleResize =this.handleResize.bind(this);
 
 		//getInitialState
 		this.state = {
-			users: {}
+			users: {},
+      windowWidth: window.innerWidth
 		}
 	}
 
@@ -28,6 +30,20 @@ class App extends React.Component{
 			users: userData
 		})
 	}
+
+  componentDidMount() {
+    window.addEventListener('resize', this.handleResize)
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.handleResize)
+  }
+
+  handleResize(e) {
+    this.setState({
+    windowWidth: window.innerWidth
+    });
+  }
 
   updateCount(userId,chatId){
     this.props.updateCount(userId, chatId);
@@ -48,45 +64,59 @@ class App extends React.Component{
   }
 
 	render(){
-      let content;
-      // wait for props to be ready before rendering
-      if (this.props.allUsers[this.props.user.userId]) {
+    const smallWidth= this.state.windowWidth <760? true : false;
+    const user = this.props.allUsers[this.props.user.userId]
+    const chatList = <ChatList 
+                      users={this.props.allUsers}
+                      chats={this.props.chats}
+                      currentUser={this.props.user}
+                      deleteChat={this.props.deleteChat}
+                    />;
+    const noChats = <div>No chats selected</div>;
+    let chatListBigContent,
+        chatViewBigContent;
+    if (!smallWidth) {
+      chatListBigContent = noChats;
+      chatViewBigContent = chatList;
+    }
 
-        const user = this.props.allUsers[this.props.user.userId]
-
-        content = <div className="view-container">
+      return (
+        <div className="view-container">
           <Header title="Chat" avatar={user.image} username={user.name}/>
+
           <div className="content-container">
-            <ChatList 
-              users={this.props.allUsers}
-              chats={this.props.chats}
-              currentUser={this.props.user}
-              deleteChat={this.props.deleteChat}
-            />
 
             <Match pattern={`/chat/`} exactly render={
-              ()=>(<div>No chats selected</div>)
+              ()=>(
+                <div>
+                  {chatList}
+                  {chatListBigContent}
+                </div>
+              )
             } />
 
-            <Match pattern={`/chat/:chatId`} component={(params) => <ChatView 
-              chats={this.props.chats} 
-              users={this.props.allUsers} 
-              currentUser={this.props.user} 
-              updateCount={this.updateCount} 
-              addMessage={this.addMessage}
-              addViewersToMessage={this.addViewersToMessage}
-              leaveChat={this.leaveChat}
-              {...params}
-              />} 
-
-              />
+            <Match pattern={`/chat/:chatId`} render={
+              (params) => (
+                <div>
+                  {chatViewBigContent}
+                  <ChatView 
+                    chats={this.props.chats} 
+                    users={this.props.allUsers} 
+                    currentUser={this.props.user} 
+                    updateCount={this.updateCount} 
+                    addMessage={this.addMessage}
+                    addViewersToMessage={this.addViewersToMessage}
+                    leaveChat={this.leaveChat}
+                    {...params}
+                    />
+                  </div>
+                )
+              } 
+            />
           </div>
-          
+      
         </div>
-      } else {
-        content = <div></div>
-      }
-  		return content;
+      )
     }
 	}
 
