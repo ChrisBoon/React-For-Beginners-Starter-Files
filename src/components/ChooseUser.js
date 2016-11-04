@@ -30,14 +30,14 @@ class ChooseUser extends React.Component{
           onChange={this.handleChange}
           ref={(input)=>{this[key] = input}}
           checked={this.props.alreadyChecked}
+          id={`id${key}`}
           />
     }
     
     return (
       <li className={`c-invite-included-${alreadyWatching? 'true' : 'false'}`} >
-        <label>{renderedUser.name}
         {includeToggle}
-        </label>
+        <label htmlFor={`id${key}`}>{renderedUser.name}</label>
         <span className={`toggle ${alreadyWatching? 'toggle-active toggle-disabled' : ''}`}></span>
       </li>
     )
