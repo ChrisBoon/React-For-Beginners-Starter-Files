@@ -20,7 +20,7 @@ class SwitchUser extends React.Component{
     const allUsers = this.props.allUsers;
     const userId = this.props.user.userId;
     const currentUser = userId === key;
-    if (allUsers[key].class ==='7d') {
+    if (allUsers[key].inClass) {
       return(
         <li key={key} className={`c-switch-user c-switch-user-${allUsers[key].role} c-switch-user-${currentUser? 'true' : 'false'} `} onClick={()=> this.changeUser(key)}>
           <div className="avatar-container">
